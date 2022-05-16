@@ -9,15 +9,84 @@ jobs:
   validate-code:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: "Checkout"
+        uses: actions/checkout@v3
+      - name: "Set up Java"
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      - name: "Unit test"
+        run: |
+          gradle test
+        shell: bash
+      - name: "Package"
+        run: |
+          gradle build -x test
+        shell: bash
+  validate-infra:
+    runs-on: [ self-hosted, linux, kubectl, dev ]
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+      - name: "Validate"
+        id: validate
+      - name: "Validate microservice"
+        working-directory: .
+        run: |
+          pwd
+          echo "Validate microservice file: infra/microservice.yml"
+          kubectl apply -f infra/microservice.yml --dry-run='client'
+        shell: bash
+  deploy_dev:
+    if: ${{ github.ref_name == 'main' }}
+    needs: [ validate-code, validate-infra ]
+    runs-on: [ self-hosted, linux, docker, kubectl, dev ]
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+      - name: "Set up Java"
+        uses: actions/setup-java@v3
         with:
-          arguments: build
+          java-version: '11'
+          distribution: 'adopt'
+      - name: "Package"
+        run: |
+          gradle build -x test
+        shell: bash
+      - id: define-image-tag
+        name: "Define docker image tag"
+        run: |
+          IMAGE_TAG="${{inputs.dockerRepo}}/$APP_NAME:${{github.run_number}}"
+          echo "::set-output name=image-tag::$(echo $IMAGE_TAG)"
+        shell: bash
+      - id: build-docker-image
+        name: "Build docker image"
+        working-directory: .
+        run: |
+          echo "Building image ${{ steps.define-image-tag.outputs.image-tag }} ..."
+          docker build -t ${{ steps.define-image-tag.outputs.image-tag }} .
+        shell: bash
+
+      - id: push-docker-image
+        name: "Push docker image to image repository"
+        run: |
+          echo "Pushing image to ${{ steps.define-image-tag.outputs.image-tag }} ..."
+          docker push ${{ steps.define-image-tag.outputs.image-tag }}
+        shell: bash
+
+      - id: remove-local-image
+        name: "Remove image from local docker"
+        run: |
+          echo "Removing image ${{ steps.define-image-tag.outputs.image-tag }} ..."
+          docker rmi ${{ steps.define-image-tag.outputs.image-tag }}
+        shell: bash
+
+      - id: apply-to-k8s
+        name: "Apply to Kubernetes"
+        working-directory: ${{ inputs.app-folder }}
+        run: |
+          echo "Deploying to cluster  ..."
+          sed -i "s+<container-image>+${{ steps.define-image-tag.outputs.image-tag }}+g" infra/microservice.yml
+          kubectl apply -f infra/microservice.yml
+        shell: bash

@@ -4,10 +4,6 @@ plugins {
 	id 'java'
 }
 
-group = 'az.telegram'
-version = 'v1.0.0'
-sourceCompatibility = '11'
-
 repositories {
 	mavenCentral()
 }
@@ -19,4 +15,11 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootJar {
+	archivesBaseName = "telegram-bot"
+}
+jar {
+	enabled = true
 }
