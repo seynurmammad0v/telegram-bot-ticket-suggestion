@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.7'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'groovy'
 }
 
 repositories {
@@ -11,14 +12,22 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//spock
+	implementation 'org.codehaus.groovy:groovy:3.0.10'
+	testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0")
+	testImplementation "org.spockframework:spock-core"
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
 
 bootJar {
-	archivesBaseName = "telegram-bot"
+	archivesBaseName = "ms-telegram-bot"
 }
 jar {
 	enabled = true
