@@ -3,6 +3,7 @@ name: "Build and Deploy ms-telegram-bot"
 on:
   push:
     paths:
+      - '.github/**'
       - 'ms-telegram-bot/**'
       - '!ms-telegram-bot/README.md'
 
@@ -19,8 +20,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: "Unit test"
+        working-directory: "ms-telegram-bot"
         run: gradle test
       - name: "Package"
+        working-directory: "ms-telegram-bot"
         run: gradle build -x test
 #  validate-infra:
 #    runs-on: ubuntu-latest
