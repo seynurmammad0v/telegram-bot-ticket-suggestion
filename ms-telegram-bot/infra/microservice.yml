@@ -1,18 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bot-deployment
+  name: ms-telegram-bot
 spec:
   replicas: 3
   selector:
     matchLabels:
-      component: web
+      component: telegram-bot
   template:
     metadata:
       labels:
-        component: web
+        component: telegram-bot
     spec:
       containers:
         - name: client
+          image: container-image
           ports:
             - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telegram-bot-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: telegram-bot
+  ports:
+    - port:  3000
+      targetPort: 3000
