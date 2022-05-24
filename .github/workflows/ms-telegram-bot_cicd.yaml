@@ -20,27 +20,33 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
+
       - name: "Set up Java"
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
+
       - name: "Unit test"
         working-directory: "ms-telegram-bot"
         run: gradle test
+
       - name: "Package"
         working-directory: "ms-telegram-bot"
         run: gradle build -x test
+
   validate-infra:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
+
       - name: "Setup gcloud CLI"
         uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
         with:
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.GKE_PROJECT }}
+
       - name: "Get the GKE credentials for validating to the cluster"
         uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
         with:
@@ -55,55 +61,60 @@ jobs:
           echo "Validate microservice file: infra/microservice.yml"
           kubectl apply -f infra/microservice.yml --dry-run='client'
         shell: bash
-#  deploy:
+
+  deploy:
 #    if: ${{ github.ref_name == 'main' }}
-#    needs: [ validate-code, validate-infra ]
-#    runs-on: [ self-hosted, linux, docker, kubectl, dev ]
-#    steps:
-#      - name: "Checkout"
-#        uses: actions/checkout@v3
-#      - name: "Set up Java"
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'adopt'
-#      - name: "Package"
-#        run: |
-#          gradle build -x test
-#        shell: bash
-#      - id: define-image-tag
-#        name: "Define docker image tag"
-#        run: |
-#          IMAGE_TAG="${{inputs.dockerRepo}}/$APP_NAME:${{github.run_number}}"
-#          echo "::set-output name=image-tag::$(echo $IMAGE_TAG)"
-#        shell: bash
-#      - id: build-docker-image
-#        name: "Build docker image"
-#        working-directory: .
-#        run: |
-#          echo "Building image ${{ steps.define-image-tag.outputs.image-tag }} ..."
-#          docker build -t ${{ steps.define-image-tag.outputs.image-tag }} .
-#        shell: bash
-#
-#      - id: push-docker-image
-#        name: "Push docker image to image repository"
-#        run: |
-#          echo "Pushing image to ${{ steps.define-image-tag.outputs.image-tag }} ..."
-#          docker push ${{ steps.define-image-tag.outputs.image-tag }}
-#        shell: bash
-#
-#      - id: remove-local-image
-#        name: "Remove image from local docker"
-#        run: |
-#          echo "Removing image ${{ steps.define-image-tag.outputs.image-tag }} ..."
-#          docker rmi ${{ steps.define-image-tag.outputs.image-tag }}
-#        shell: bash
-#
-#      - id: apply-to-k8s
-#        name: "Apply to Kubernetes"
-#        working-directory: ${{ inputs.app-folder }}
-#        run: |
-#          echo "Deploying to cluster  ..."
-#          sed -i "s+<container-image>+${{ steps.define-image-tag.outputs.image-tag }}+g" infra/microservice.yml
-#          kubectl apply -f infra/microservice.yml
-#        shell: bash
+    needs: [ validate-code, validate-infra ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Set up Java"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: "Package"
+        run: |
+          gradle build -x test
+        shell: bash
+
+      - name: "Setup gcloud CLI"
+        uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.GKE_PROJECT }}
+      - name: "Configure Docker to use the gcloud command-line"
+        run: |-
+          gcloud --quiet auth configure-docker
+
+      - name: "Get the GKE credentials for validating to the cluster"
+        uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+          credentials: ${{ secrets.GKE_SA_KEY }}
+
+      - name: "Build the Docker image"
+        run: |-
+          echo "Building image "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA " ..."
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" \
+            .
+
+      - name: "Push docker image to image repository"
+        run: |-
+          echo "Pushing image to "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" ..."
+          docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+
+      - name: "Apply to Kubernetes"
+        working-directory: ${{ inputs.app-folder }}
+        run: |
+          echo "Deploying to cluster  ..."
+          sed -i "s+container-image+"gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"+g" infra/microservice.yml
+          kubectl apply -f infra/microservice.yml
+        shell: bash
