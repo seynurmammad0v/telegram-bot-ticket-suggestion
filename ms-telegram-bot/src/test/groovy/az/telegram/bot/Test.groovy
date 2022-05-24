@@ -8,7 +8,7 @@ class Test extends Specification {
 
         where:
         name     | length
-        "Spock"  | 2
+        "Spock"  | 5
         "Kirk"   | 4
         "Scotty" | 6
     }
