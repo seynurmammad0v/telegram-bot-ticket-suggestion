@@ -17,7 +17,14 @@ spec:
           image: container-image
           ports:
             - containerPort: 3000
-
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
 ---
 apiVersion: v1
 kind: Service
