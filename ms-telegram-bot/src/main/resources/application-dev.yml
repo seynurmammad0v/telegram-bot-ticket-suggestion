@@ -1,6 +1,14 @@
 server:
   port: 8081
 
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+  server:
+    port: 5001
 telegram:
   bot:
     username: "@TicketsSuggestionBot"
