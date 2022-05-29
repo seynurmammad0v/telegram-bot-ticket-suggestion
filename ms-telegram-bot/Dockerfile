@@ -6,4 +6,6 @@ COPY --chown=appuser ./build/libs/ms-telegram-bot.jar .
 
 RUN chmod 400 ms-telegram-bot.jar
 
-EXPOSE 8080
+EXPOSE 80
+
+RUN exec java  -jar ms-account.jar --server.port=80
