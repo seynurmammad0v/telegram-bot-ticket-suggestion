@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 management:
   endpoints:
     enabled-by-default: false
@@ -10,7 +13,8 @@ management:
       enabled: true
     readinessState:
       enabled: true
-
+  server:
+    port: 5000
 telegram:
   bot:
     username: "@TicketsSuggestionBot"
