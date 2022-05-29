@@ -1,37 +1,52 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.7'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
-	id 'groovy'
+    id 'org.springframework.boot' version '2.6.7'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'groovy'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//monitoring
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    //web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	//spock
-	implementation 'org.codehaus.groovy:groovy:3.0.10'
-	testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0")
-	testImplementation "org.spockframework:spock-core"
+    //lombok
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    //telegram API
+    implementation 'org.telegram:telegrambots-spring-boot-starter:6.0.1'
+
+    //monitoring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    //spock
+    implementation 'org.codehaus.groovy:groovy:3.0.10'
+    testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0")
+    testImplementation "org.spockframework:spock-core"
+
+    //annotation processor
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
-	testLogging {
-		events "passed", "skipped", "failed"
-	}
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 bootJar {
-	archivesBaseName = "ms-telegram-bot"
+    archivesBaseName = "ms-telegram-bot"
 }
 jar {
-	enabled = true
+    enabled = true
 }
