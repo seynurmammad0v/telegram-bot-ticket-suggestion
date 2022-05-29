@@ -16,7 +16,7 @@ spec:
         - name: client
           image: container-image
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
@@ -36,4 +36,4 @@ spec:
     component: telegram-bot
   ports:
     - port:  8080
-      targetPort: 8080
+      targetPort: 80
