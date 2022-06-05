@@ -25,6 +25,20 @@ spec:
             httpGet:
               path: /actuator/health/readiness
               port: 5000
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_HOST
+              value: postgres-cluster-ip-service
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_DATABASE
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassowrd
+                  key: PGPASSWORD
 ---
 apiVersion: v1
 kind: Service
