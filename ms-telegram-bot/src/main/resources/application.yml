@@ -1,5 +1,6 @@
 server:
   port: 8080
+
 management:
   endpoints:
     enabled-by-default: false
@@ -19,7 +20,7 @@ telegram:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_DATABASE}/${POSTGRES_PORT}
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
   jpa:

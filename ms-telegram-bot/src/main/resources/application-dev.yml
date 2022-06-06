@@ -17,7 +17,6 @@ telegram:
     telegramUrl: https://api.telegram.org/bot
     botPath: webhook
 
-
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
