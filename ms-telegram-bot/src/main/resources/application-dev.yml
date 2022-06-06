@@ -13,6 +13,21 @@ telegram:
   bot:
     username: "@TicketsSuggestionBot"
     botToken: 5502365793:AAF7QMf08TjBOsUKs5PHyhG5ELiIY4sTmlY
-    webHookPath: https://7cac-5-197-192-120.eu.ngrok.io/
+    webHookPath: https://755a-5-197-192-120.eu.ngrok.io
     telegramUrl: https://api.telegram.org/bot
     botPath: webhook
+
+
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+  liquibase:
+    change-log: classpath:liquibase/changelog-master.yml
+    #    disable liquibase
+    enabled: false

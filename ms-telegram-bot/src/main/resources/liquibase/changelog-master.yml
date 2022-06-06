@@ -1,0 +1,9 @@
+databaseChangeLog:
+  -  changeSet:
+       id:  sqlFile-example
+       author:  'Seynur Mammadov'
+       changes:
+         - sqlFile:
+           dbms:  'postgresql'
+           path:  liquibase/1.0/changelog-1.0.1.sql
+           stripComments:  true

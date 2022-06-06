@@ -3,7 +3,7 @@ name: "Build and Deploy ms-telegram-bot"
 on:
   push:
     paths:
-      - '.github/**'
+      - '.github/ms-telegram-bot_cicd.yml'
       - 'ms-telegram-bot/**'
       - '!ms-telegram-bot/README.md'
 

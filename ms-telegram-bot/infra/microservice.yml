@@ -25,11 +25,25 @@ spec:
             httpGet:
               path: /actuator/health/readiness
               port: 5000
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_HOST
+              value: postgres-cluster-ip-service
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_DATABASE
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassowrd
+                  key: PGPASSWORD
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: telegram-bot-cluster-ip-service
+  name: ms-telegram-bot-cluster-ip-service
 spec:
   type: ClusterIP
   selector:
