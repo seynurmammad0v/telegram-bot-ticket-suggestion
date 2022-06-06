@@ -5,6 +5,9 @@ on:
     paths:
       - '.github/k8s-postgres_cicd.yml'
       - 'k8s-postgres/**'
+env:
+  GKE_CLUSTER: cluster-1
+  GKE_ZONE: europe-west1-b
 
 jobs:
   validate-infra:
