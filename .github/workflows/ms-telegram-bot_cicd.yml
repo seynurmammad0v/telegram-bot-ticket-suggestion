@@ -63,7 +63,7 @@ jobs:
         shell: bash
 
   deploy:
-    if: ${{ github.ref_name == 'main' }}
+#    if: ${{ github.ref_name == 'main' }}
     needs: [ validate-code, validate-infra ]
     runs-on: ubuntu-latest
     steps:
