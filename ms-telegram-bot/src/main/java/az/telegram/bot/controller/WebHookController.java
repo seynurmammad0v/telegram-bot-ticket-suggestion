@@ -28,6 +28,6 @@ public class WebHookController {
     //for testing ngrok
     @GetMapping
     public ResponseEntity<String> health() {
-        return ResponseEntity.ok("Omar pidor");
+        return ResponseEntity.ok("health");
     }
 }
