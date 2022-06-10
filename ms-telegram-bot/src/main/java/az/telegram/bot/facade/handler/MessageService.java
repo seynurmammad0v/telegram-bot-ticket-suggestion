@@ -1,4 +1,4 @@
-package az.telegram.bot.service;
+package az.telegram.bot.facade.handler;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;

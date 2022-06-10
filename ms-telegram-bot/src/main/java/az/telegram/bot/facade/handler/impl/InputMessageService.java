@@ -1,6 +1,6 @@
-package az.telegram.bot.service.impl;
+package az.telegram.bot.facade.handler.impl;
 
-import az.telegram.bot.service.MessageService;
+import az.telegram.bot.facade.handler.MessageService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

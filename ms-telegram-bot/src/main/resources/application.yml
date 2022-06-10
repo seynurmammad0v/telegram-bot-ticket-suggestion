@@ -13,7 +13,7 @@ telegram:
   bot:
     username: "@TicketsSuggestionBot"
     botToken: 5502365793:AAF7QMf08TjBOsUKs5PHyhG5ELiIY4sTmlY
-    webHookPath: https://755a-5-197-192-120.eu.ngrok.io
+    webHookPath: https://www.mstelegrambot.com/
     telegramUrl: https://api.telegram.org/bot
     botPath: webhook
 

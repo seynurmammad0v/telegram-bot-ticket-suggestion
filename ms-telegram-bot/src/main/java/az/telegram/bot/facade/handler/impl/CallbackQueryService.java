@@ -1,6 +1,6 @@
-package az.telegram.bot.service.impl;
+package az.telegram.bot.facade.handler.impl;
 
-import az.telegram.bot.service.QueryService;
+import az.telegram.bot.facade.handler.QueryService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
