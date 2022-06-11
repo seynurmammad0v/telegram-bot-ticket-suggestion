@@ -1,12 +1,7 @@
 package az.telegram.bot.service.impl;
 
-import az.telegram.bot.dao.Answer;
-import az.telegram.bot.dao.Session;
-import az.telegram.bot.dao.User;
-import az.telegram.bot.dao.repository.AnswerRepository;
-import az.telegram.bot.dao.repository.QuestionRepository;
-import az.telegram.bot.dao.repository.SessionRepository;
-import az.telegram.bot.dao.repository.UserRepository;
+import az.telegram.bot.dao.*;
+import az.telegram.bot.dao.repository.*;
 import az.telegram.bot.model.enums.Status;
 import az.telegram.bot.service.SessionService;
 import org.springframework.stereotype.Service;
@@ -19,15 +14,14 @@ public class SessionServiceImpl implements SessionService {
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final LanguageRepository languageRepository;
 
-    public SessionServiceImpl(SessionRepository sessionRepository,
-                              UserRepository userRepository,
-                              QuestionRepository questionRepository,
-                              AnswerRepository answerRepository) {
+    public SessionServiceImpl(SessionRepository sessionRepository, UserRepository userRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, LanguageRepository languageRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.languageRepository = languageRepository;
     }
 
     @Override
@@ -54,9 +48,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Boolean haveSession(Long userId) {
-        Session session = sessionRepository.getByUserId(userId, Status.IN_PROGRESS);
-        return session != null;
+    public Session getSessionIfExist(Long userId) {
+        return sessionRepository.getByUserId(userId, Status.IN_PROGRESS);
     }
 
     @Override
@@ -68,6 +61,31 @@ public class SessionServiceImpl implements SessionService {
     public Long getSessionLanguage(Long userId) {
         Session session = sessionRepository.getByUserId(userId, Status.IN_PROGRESS);
         return (session == null) ? 4L : session.getLangId();
+    }
+
+    @Override
+    public void setLanguage(Long userId, String lang) {
+        Session session = sessionRepository.getByUserId(userId, Status.IN_PROGRESS);
+        session.setLangId(languageRepository.getLanguageByLang(lang).getId());
+        sessionRepository.save(session);
+    }
+
+    @Override
+    public void setAnswer(Long userId, String text) {
+        Session session = sessionRepository.getByUserId(userId, Status.IN_PROGRESS);
+        Answer answer = answerRepository.findFirstBySession_IdOrderByIdDesc(session.getId());
+        answer.setText(text);
+        answerRepository.save(answer);
+    }
+
+    @Override
+    public void createNextAnswerForQuestion(Long userId, Question question) {
+        Session session = sessionRepository.getByUserId(userId, Status.IN_PROGRESS);
+        Answer answer = Answer.builder()
+                .question(question)
+                .session(session)
+                .build();
+        answerRepository.save(answer);
     }
 
 }

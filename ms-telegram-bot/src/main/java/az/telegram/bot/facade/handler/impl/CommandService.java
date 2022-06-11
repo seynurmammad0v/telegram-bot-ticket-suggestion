@@ -4,6 +4,7 @@ import az.telegram.bot.exceptions.StartBeforeStopException;
 import az.telegram.bot.exceptions.StopBeforeException;
 import az.telegram.bot.exceptions.StopNotifyException;
 import az.telegram.bot.exceptions.UnknownCommandException;
+import az.telegram.bot.facade.handler.QueryService;
 import az.telegram.bot.model.enums.CommandType;
 import az.telegram.bot.facade.handler.MessageService;
 import az.telegram.bot.service.MessageCreatorService;
@@ -20,10 +21,13 @@ public class CommandService implements MessageService {
 
     private final MessageCreatorService msgCreatorService;
     private final SessionService sessionService;
+    private final MessageService inputMessageService;
 
-    public CommandService(MessageCreatorService msgCreatorService, SessionService sessionService) {
+    public CommandService(MessageCreatorService msgCreatorService, SessionService sessionService, @Qualifier("input") MessageService inputMessageService) {
         this.msgCreatorService = msgCreatorService;
         this.sessionService = sessionService;
+        this.inputMessageService = inputMessageService;
+
     }
 
     @Override
@@ -43,10 +47,9 @@ public class CommandService implements MessageService {
     }
 
     private SendMessage startCommand(Message message) {
-        if (!sessionService.haveSession(message.getFrom().getId())) {
+        if (sessionService.getSessionIfExist(message.getFrom().getId()) == null) {
             sessionService.createSession(message.getFrom().getId(), message.getChatId());
-            return msgCreatorService.createMsgWithData(message.getChatId(),message.getFrom().getId(),"started");
-//            return inputMessageHandler.handle(message, true);
+            return inputMessageService.handle(message, true);
         } else {
             return msgCreatorService.createError(message.getChatId(),
                     new StopBeforeException(),
@@ -55,7 +58,7 @@ public class CommandService implements MessageService {
     }
 
     public SendMessage stopCommand(Message message) {
-        if (sessionService.haveSession(message.getFrom().getId())) {
+        if (sessionService.getSessionIfExist(message.getFrom().getId()) != null) {
 //            template.convertAndSend(RabbitMQConfig.exchange,
 //                    RabbitMQConfig.cancelled,
 //                    dataCache.getUserData(userId).getUUID());

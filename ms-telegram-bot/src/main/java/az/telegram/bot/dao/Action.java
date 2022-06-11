@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,6 +65,15 @@ public class Action {
     @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "action")
     Set<ActionTranslate> actionTranslates = new HashSet<>();
+
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
+    LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
+
 
 }
 

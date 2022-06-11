@@ -60,16 +60,16 @@ public class Session {
 //    Contact contact;
 
     @Column(name = "lock")
-    Boolean lock = false;
+    Boolean lock;
 
     @Column(name = "lang_id")
-    Long langId = 4L;
+    Long langId;
 
     @Column(name = "offers_count")
-    Integer offersCount = 0;
+    Integer offersCount;
 
     @Column(name = "sent_count")
-    Integer sentCount = 0;
+    Integer sentCount;
 
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp

@@ -29,6 +29,4 @@ public class Answer {
     @JoinColumn(name = "session_id")
     Session session;
 
-
-
 }

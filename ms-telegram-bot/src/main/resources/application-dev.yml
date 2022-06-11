@@ -25,8 +25,9 @@ spring:
     password: password
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   liquibase:
+
     change-log: classpath:liquibase/changelog-master.yml
-    #    disable liquibase
-    enabled: false
+#    disable liquibase
+#    enabled: false
