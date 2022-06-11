@@ -19,10 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import az.telegram.bot.model.enums.Status;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.telegram.telegrambots.meta.api.objects.Contact;
 
 @Data
 @Entity

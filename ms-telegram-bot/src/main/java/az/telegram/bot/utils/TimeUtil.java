@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Component
 public class TimeUtil {
+    //todo
 //    @Value("${offer.responseLimit.hours}")
 //    String hours;
 //    @Value("${offer.responseLimit.minutes}")

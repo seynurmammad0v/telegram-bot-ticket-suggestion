@@ -43,7 +43,6 @@ public class Language {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-
 }
 
 

@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,7 +25,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "action_translates")
-public class ActionTranslate implements Serializable {
+public class ActionTranslate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

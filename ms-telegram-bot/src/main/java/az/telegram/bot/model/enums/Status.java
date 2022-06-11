@@ -2,6 +2,6 @@ package az.telegram.bot.model.enums;
 
 public enum Status {
     INACTIVE,
-    WAITING_ANSWER,
+    WAITING_OFFERS,
     IN_PROGRESS
 }

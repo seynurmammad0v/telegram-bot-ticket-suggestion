@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @Component
 public class FileUtil {
+    //todo
 //    @Value("${offer.image.path}")
 //    String path;
 //    @Value("${offer.image.extension}")

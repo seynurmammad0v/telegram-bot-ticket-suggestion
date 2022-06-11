@@ -74,7 +74,6 @@ public class Action {
     @UpdateTimestamp
     LocalDateTime updatedAt;
 
-
 }
 
 

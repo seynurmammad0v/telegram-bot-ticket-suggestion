@@ -31,6 +31,7 @@ import java.util.Set;
 @Builder
 @Table(name = "questions")
 public class Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

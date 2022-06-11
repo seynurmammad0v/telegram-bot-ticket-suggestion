@@ -12,12 +12,12 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Session t set t.status=:status where t.user.userId=:userId")
-    void setStatusByUserId(Long userId, Status status);
+    @Query("update Session t set t.status=:status where t.id=:sessionId")
+    void setStatusBySessionId(Status status, Long sessionId);
 
-    @Query("select t from Session t where t.user.userId=:userId and t.status=:status")
-    Session getByUserId(Long userId, Status status);
-
+    @Query("select t from Session t where t.user.userId=:userId and not t.status=:status")
+    Session getByUserIdAndNotInStatus(Long userId, Status status);
+//todo
 //    @Query("SELECT t FROM Session t WHERE t.isWaitingAnswer=true and t.expiredAt < CURRENT_TIMESTAMP and t.status=true")
 //    List<Session> getNotAnsweredSessions();
 

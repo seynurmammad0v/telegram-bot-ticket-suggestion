@@ -20,7 +20,6 @@ public class TelegramFacade {
     private final MessageService replyHandler;
     private final MessageService contactHandler;
 
-
     public TelegramFacade(
             @Qualifier("input") MessageService inputMessageService,
             @Qualifier("command") MessageService commandHandler,

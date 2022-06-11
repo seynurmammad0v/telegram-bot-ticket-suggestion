@@ -58,6 +58,7 @@ public class CallbackQueryService implements QueryService {
 
     private BotApiMethod<?> regexInlineButton(CallbackQuery msg) {
         if (Objects.equals(msg.getData(), QueryType.NEXT.toString())) {
+            //todo
 //            listenerService.sendNextPhotos(msg.getFrom().getId());
             return msgCreatorService.deleteMessage(msg.getMessage().getChatId(), msg.getMessage().getMessageId());
         }

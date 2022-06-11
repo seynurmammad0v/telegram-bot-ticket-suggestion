@@ -1,7 +1,10 @@
 package az.telegram.bot.facade.handler.impl;
 
 import az.telegram.bot.dao.Action;
+import az.telegram.bot.dao.AgencyOffer;
 import az.telegram.bot.dao.Question;
+import az.telegram.bot.dao.Session;
+import az.telegram.bot.dao.repository.AgencyOfferRepository;
 import az.telegram.bot.exceptions.IncorrectAnswerException;
 import az.telegram.bot.exceptions.OfferShouldBeRepliedException;
 import az.telegram.bot.exceptions.StartBeforeException;
@@ -9,6 +12,7 @@ import az.telegram.bot.facade.handler.MessageService;
 import az.telegram.bot.model.Bot;
 import az.telegram.bot.model.enums.ActionType;
 import az.telegram.bot.model.enums.StaticStates;
+import az.telegram.bot.model.enums.Status;
 import az.telegram.bot.service.LanguageService;
 import az.telegram.bot.service.MessageCreatorService;
 import az.telegram.bot.service.QuestionService;
@@ -33,12 +37,20 @@ public class InputMessageService implements MessageService {
     private final LanguageService languageService;
     private final Bot bot;
 
-    public InputMessageService(MessageCreatorService msgCreatorService, SessionService sessionService, QuestionService questionService, LanguageService languageService, Bot bot) {
+    private final AgencyOfferRepository agencyOfferRepository;
+
+    public InputMessageService(MessageCreatorService msgCreatorService,
+                               SessionService sessionService,
+                               QuestionService questionService,
+                               LanguageService languageService,
+                               Bot bot,
+                               AgencyOfferRepository agencyOfferRepository) {
         this.msgCreatorService = msgCreatorService;
         this.sessionService = sessionService;
         this.questionService = questionService;
         this.languageService = languageService;
         this.bot = bot;
+        this.agencyOfferRepository = agencyOfferRepository;
     }
 
     @Override
@@ -77,7 +89,7 @@ public class InputMessageService implements MessageService {
                 .findFirst()
                 .orElseThrow(RuntimeException::new)
                 .getType();
-        return actionType == ActionType.CALENDAR && !Pattern.matches(currentQuestion.getRegex(),text);
+        return actionType == ActionType.CALENDAR && !Pattern.matches(currentQuestion.getRegex(), text);
     }
 
     private void regexAnswerType(Question question, Message msg) {
@@ -143,44 +155,30 @@ public class InputMessageService implements MessageService {
                 .findFirst()
                 .orElseThrow(RuntimeException::new)
                 .getType();
-
-        sendOfferOrAnswers(question, msg.getText());
-
+        sendOfferOrAnswers(question, msg);
         return msgCreatorService.getMessageByAction(question,
                 languageService.getUserLanguage(msg.getFrom().getId()),
                 actionType,
                 msg.getChatId());
     }
 
-
-    private void sendOfferOrAnswers(Question question, String userAnswer) {
+    //todo
+    private void sendOfferOrAnswers(Question question, Message msg) {
         boolean end = Objects.equals(question.getState(), StaticStates.REPLY_END.toString());
         Optional<Action> questionAction = question.getActions().stream().findFirst();
+        Session session = sessionService.getSessionIfExist(msg.getFrom().getId());
         if (questionAction.isPresent()) {
             if (questionAction.get().getNextQuestion() == null && !end) {
-                sendCollectedData();
+                sessionService.setQuestionByState(session.getId(), StaticStates.END);
+                sessionService.changeSessionStatus(Status.WAITING_OFFERS, session.getId());
             }
         }
         if (end) {
-            acceptOffer(userAnswer);
+            AgencyOffer offer = agencyOfferRepository.getByMessageIdAndSessionId(msg.getReplyToMessage().getMessageId(), session.getId());
+            offer.setPhoneNumber(msg.getText());
+            agencyOfferRepository.save(offer);
+            sessionService.setQuestionByState(session.getId(), StaticStates.END);
         }
     }
 
-
-    private void sendCollectedData() {
-//        template.convertAndSend(RabbitMQConfig.exchange,
-//                RabbitMQConfig.sent,
-//                dataCache.getUserData(userId));
-//        dataCache.setQuestion(userId, Question.builder().state(StaticStates.END.toString()).build());
-//        dataCache.clearData(userId);
-    }
-
-    private void acceptOffer(String phoneNumber) {
-//        AcceptedOffer offer = acceptedOfferRepository.findById(userId);
-//        offer.setPhoneNumber(phoneNumber);
-//        acceptedOfferRepository.save(userId, offer);
-//        template.convertAndSend(RabbitMQConfig.exchange, RabbitMQConfig.accepted, offer);
-//        dataCache.setQuestion(userId, Question.builder().state(StaticStates.END.toString()).build());
-//        dataCache.clearData(userId);
-    }
 }

@@ -1,11 +1,13 @@
 package az.telegram.bot.facade.handler.impl;
 
+import az.telegram.bot.dao.Session;
 import az.telegram.bot.exceptions.StartBeforeStopException;
 import az.telegram.bot.exceptions.StopBeforeException;
 import az.telegram.bot.exceptions.StopNotifyException;
 import az.telegram.bot.exceptions.UnknownCommandException;
 import az.telegram.bot.model.enums.CommandType;
 import az.telegram.bot.facade.handler.MessageService;
+import az.telegram.bot.model.enums.Status;
 import az.telegram.bot.service.MessageCreatorService;
 import az.telegram.bot.service.SessionService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,20 +59,17 @@ public class CommandService implements MessageService {
         }
     }
 
-    public SendMessage stopCommand(Message message) {
-        if (sessionService.getSessionIfExist(message.getFrom().getId()) != null) {
-//            template.convertAndSend(RabbitMQConfig.exchange,
-//                    RabbitMQConfig.cancelled,
-//                    dataCache.getUserData(userId).getUUID());
-            Long langId = sessionService.getSessionLanguage(message.getFrom().getId());
-            sessionService.deactivateSession(message.getFrom().getId());
-            return msgCreatorService.createNotify(message.getChatId(),
+    public SendMessage stopCommand(Message msg) {
+        Session session = sessionService.getSessionIfExist(msg.getFrom().getId());
+        if (session != null) {
+            sessionService.changeSessionStatus(Status.INACTIVE, session.getId());
+            return msgCreatorService.createNotify(msg.getChatId(),
                     new StopNotifyException(),
-                    langId);
+                    session.getLangId());
         } else {
-            return msgCreatorService.createError(message.getChatId(),
+            return msgCreatorService.createError(msg.getChatId(),
                     new StartBeforeStopException(),
-                    sessionService.getSessionLanguage(message.getFrom().getId()));
+                    sessionService.getSessionLanguage(msg.getFrom().getId()));
         }
     }
 
