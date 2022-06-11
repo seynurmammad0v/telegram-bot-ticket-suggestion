@@ -57,8 +57,6 @@ public class Session {
     @Enumerated(EnumType.STRING)
     Status status;
 
-//    Contact contact;
-
     @Column(name = "lock")
     Boolean lock;
 

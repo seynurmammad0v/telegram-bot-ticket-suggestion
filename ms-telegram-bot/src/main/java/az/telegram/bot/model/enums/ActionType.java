@@ -5,6 +5,5 @@ public enum ActionType {
     FREETEXT,
     INLINE_BUTTON,
     CALENDAR,
-    CALENDAR_ANSWER,
     BUTTON_CONTACT_INFO
 }

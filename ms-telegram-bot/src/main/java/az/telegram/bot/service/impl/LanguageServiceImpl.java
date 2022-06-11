@@ -20,8 +20,7 @@ public class LanguageServiceImpl implements LanguageService {
 
 
     @Override
-    public Language getLanguage(Long userId) {
-
+    public Language getUserLanguage(Long userId) {
         return languageRepository.getById(sessionService.getSessionLanguage(userId));
     }
 }

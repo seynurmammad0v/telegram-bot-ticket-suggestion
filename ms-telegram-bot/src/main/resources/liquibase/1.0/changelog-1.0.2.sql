@@ -8,7 +8,7 @@ INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_ti
 INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,9, 'travelEndDate', '^((19|20)\d\d)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$');
 INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,1, NULL, NULL);
 INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,4, 'addressFrom', '^.{2,50}$');
-INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,8, NULL, '^.{2,50}$');
+INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,8, 'END', '^.{2,50}$');
 INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,12, 'REPLY_START', '^.{2,50}$');
 INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,10, 'addressToUser', '^.{2,50}$');
 INSERT INTO "questions"(created_at,updated_at,id,state,regex) VALUES (Current_timestamp,Current_timestamp,3, 'addressToType', '^.{2,50}$');

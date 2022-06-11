@@ -4,7 +4,6 @@ import az.telegram.bot.exceptions.StartBeforeStopException;
 import az.telegram.bot.exceptions.StopBeforeException;
 import az.telegram.bot.exceptions.StopNotifyException;
 import az.telegram.bot.exceptions.UnknownCommandException;
-import az.telegram.bot.facade.handler.QueryService;
 import az.telegram.bot.model.enums.CommandType;
 import az.telegram.bot.facade.handler.MessageService;
 import az.telegram.bot.service.MessageCreatorService;
@@ -23,11 +22,12 @@ public class CommandService implements MessageService {
     private final SessionService sessionService;
     private final MessageService inputMessageService;
 
-    public CommandService(MessageCreatorService msgCreatorService, SessionService sessionService, @Qualifier("input") MessageService inputMessageService) {
+    public CommandService(MessageCreatorService msgCreatorService,
+                          SessionService sessionService,
+                          @Qualifier("input") MessageService inputMessageService) {
         this.msgCreatorService = msgCreatorService;
         this.sessionService = sessionService;
         this.inputMessageService = inputMessageService;
-
     }
 
     @Override

@@ -49,7 +49,7 @@ public class InputMessageService implements MessageService {
             return sendMessage;
         }
         if (!command) {
-            checkAnswerNCaching(currentQ, msg);
+            regexAnswerType(currentQ, msg);
             currentQ = questionService.getLastQuestion(msg.getFrom().getId());
         }
         return getMessage(currentQ, msg);
@@ -64,25 +64,23 @@ public class InputMessageService implements MessageService {
             return msgCreatorService.createError(msg.getChatId(),
                     new OfferShouldBeRepliedException(),
                     sessionService.getSessionLanguage(msg.getFrom().getId()));
-        } else {
-            if (isCalendarQuestion(currentQuestion))
-                return msgCreatorService.createError(msg.getChatId(),
-                        new IncorrectAnswerException(),
-                        sessionService.getSessionLanguage(msg.getFrom().getId()));
+        } else if (isCalendarQuestion(currentQuestion, msg.getText())) {
+            return msgCreatorService.createError(msg.getChatId(),
+                    new IncorrectAnswerException(),
+                    sessionService.getSessionLanguage(msg.getFrom().getId()));
         }
         return null;
     }
 
-    public boolean isCalendarQuestion(Question currentQuestion) {
+    public boolean isCalendarQuestion(Question currentQuestion, String text) {
         ActionType actionType = currentQuestion.getActions().stream()
                 .findFirst()
                 .orElseThrow(RuntimeException::new)
                 .getType();
-        return actionType == ActionType.CALENDAR;
+        return actionType == ActionType.CALENDAR && !Pattern.matches(currentQuestion.getRegex(),text);
     }
 
-
-    private void checkAnswerNCaching(Question question, Message msg) {
+    private void regexAnswerType(Question question, Message msg) {
         Action action = question.getActions().iterator().next();
         if (action.getType() == ActionType.FREETEXT) {
             regexFreeText(question, msg, action);
@@ -90,7 +88,7 @@ public class InputMessageService implements MessageService {
             regexButton(question, msg);
         } else if (action.getType() == ActionType.BUTTON_CONTACT_INFO) {
             setAnswerAndNextQuestion(question, msg, action);
-        } else if (action.getType() == ActionType.CALENDAR_ANSWER) {
+        } else if (action.getType() == ActionType.CALENDAR) {
             bot.executeMsg(msgCreatorService.editCalendarMessage(
                     question,
                     msg,
@@ -149,7 +147,7 @@ public class InputMessageService implements MessageService {
         sendOfferOrAnswers(question, msg.getText());
 
         return msgCreatorService.getMessageByAction(question,
-                languageService.getLanguage(msg.getFrom().getId()),
+                languageService.getUserLanguage(msg.getFrom().getId()),
                 actionType,
                 msg.getChatId());
     }
