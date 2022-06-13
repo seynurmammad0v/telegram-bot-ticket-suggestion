@@ -73,9 +73,9 @@ VALUES (Current_timestamp, Current_timestamp, 29, 'Səyahət etmək istədiyiniz
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
 VALUES (Current_timestamp, Current_timestamp, 30, 'Enter the name of the place you want to travel to.', 3, 10);
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
-VALUES (Current_timestamp, Current_timestamp, 24, 'Excellent! TourApp will send you offers as soon as possible!', 3, 8);
+VALUES (Current_timestamp, Current_timestamp, 24, 'Excellent! TicketSuggestion will send you offers as soon as possible!', 3, 8);
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
-VALUES (Current_timestamp, Current_timestamp, 22, 'Отлично! TourApp отправит вам предложения в кратчайшие сроки!', 1,
+VALUES (Current_timestamp, Current_timestamp, 22, 'Отлично! TicketSuggestion отправит вам предложения в кратчайшие сроки!', 1,
         8);
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
 VALUES (Current_timestamp, Current_timestamp, 41,
@@ -88,11 +88,11 @@ INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, 
 VALUES (Current_timestamp, Current_timestamp, 40,
         'Выбранное агентство скоро с вами свяжется, но вы так же можете продолжить выбирать предложения.', 1, 14);
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
-VALUES (Current_timestamp, Current_timestamp, 2, '🇦🇿 TourApp bot-a xoş gəldiniz! Zəhmət olmasa dili seçin.', 4, 1);
+VALUES (Current_timestamp, Current_timestamp, 2, '🇦🇿 TicketSuggestion bot-a xoş gəldiniz! Zəhmət olmasa dili seçin.', 4, 1);
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
-VALUES (Current_timestamp, Current_timestamp, 3, '🇬🇧 Welcome to the TourApp bot! Please select a language.', 4, 1);
+VALUES (Current_timestamp, Current_timestamp, 3, '🇬🇧 Welcome to the TicketSuggestion bot! Please select a language.', 4, 1);
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
-VALUES (Current_timestamp, Current_timestamp, 1, '🇷🇺 Добро пожаловать в бот TourApp! Пожалуйста, выберите язык.', 4,
+VALUES (Current_timestamp, Current_timestamp, 1, '🇷🇺 Добро пожаловать в бот TicketSuggestion! Пожалуйста, выберите язык.', 4,
         1);
 INSERT INTO "question_translates"(created_at, updated_at, id, context, lang_id, question_id)
-VALUES (Current_timestamp, Current_timestamp, 23, 'Əla! Qısa zamanda TourApp sizə təkliflər göndərəcək!', 2, 8);
+VALUES (Current_timestamp, Current_timestamp, 23, 'Əla! Qısa zamanda TicketSuggestion sizə təkliflər göndərəcək!', 2, 8);
