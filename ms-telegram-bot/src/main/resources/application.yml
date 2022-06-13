@@ -29,7 +29,7 @@ spring:
   liquibase:
     change-log: classpath:liquibase/changelog-master.yml
 #    disable liquibase
-#    enabled: false
+    enabled: false
 
 offer:
   sentCount: "5"
