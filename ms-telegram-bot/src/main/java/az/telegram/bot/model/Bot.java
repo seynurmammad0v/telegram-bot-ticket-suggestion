@@ -3,6 +3,8 @@ package az.telegram.bot.model;
 import lombok.Builder;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -43,4 +45,11 @@ public class Bot extends TelegramWebhookBot {
         }
     }
 
+    public Message executePhoto(SendPhoto sendPhoto) {
+        try {
+            return this.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

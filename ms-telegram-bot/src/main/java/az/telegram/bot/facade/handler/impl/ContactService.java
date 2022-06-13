@@ -29,10 +29,9 @@ public class ContactService implements MessageService {
     public SendMessage handle(Message msg, boolean isCommand) {
         Session session = sessionService.getSessionIfExist(msg.getFrom().getId());
         if (session != null) {
-            AgencyOffer offer = agencyOfferRepository.getByMessageIdAndSessionId(msg.getReplyToMessage().getMessageId(), session.getId());
-            offer.setTelegramNumber(true);
+            session.setTelegramNumber(true);
             msg.setText(msg.getContact().getPhoneNumber());
-            agencyOfferRepository.save(offer);
+            sessionService.saveSession(session);
             return inputMessageService.handle(msg, false);
         }
         return null;

@@ -162,7 +162,6 @@ public class InputMessageService implements MessageService {
                 msg.getChatId());
     }
 
-    //todo
     private void sendOfferOrAnswers(Question question, Message msg) {
         boolean end = Objects.equals(question.getState(), StaticStates.REPLY_END.toString());
         Optional<Action> questionAction = question.getActions().stream().findFirst();
@@ -174,9 +173,8 @@ public class InputMessageService implements MessageService {
             }
         }
         if (end) {
-            AgencyOffer offer = agencyOfferRepository.getByMessageIdAndSessionId(msg.getReplyToMessage().getMessageId(), session.getId());
-            offer.setPhoneNumber(msg.getText());
-            agencyOfferRepository.save(offer);
+            session.setPhoneNumber(msg.getText());
+            sessionService.saveSession(session);
             sessionService.setQuestionByState(session.getId(), StaticStates.END);
         }
     }

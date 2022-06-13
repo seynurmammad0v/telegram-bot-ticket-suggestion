@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
@@ -17,8 +18,11 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Query("select t from Session t where t.user.userId=:userId and not t.status=:status")
     Session getByUserIdAndNotInStatus(Long userId, Status status);
-//todo
-//    @Query("SELECT t FROM Session t WHERE t.isWaitingAnswer=true and t.expiredAt < CURRENT_TIMESTAMP and t.status=true")
-//    List<Session> getNotAnsweredSessions();
+
+    @Query("select t from Session t where t.id=:sessionId and not t.status=:status")
+    Session getBySessionIdAndNotInStatus(Long sessionId, Status status);
+
+    @Query("SELECT t FROM Session t WHERE t.status=:status and t.expiredAt < CURRENT_TIMESTAMP ")
+    List<Session> getExpiredSessionsInStatus(Status status);
 
 }

@@ -84,6 +84,21 @@ public class Session {
     @Column(name = "expired_at")
     LocalDateTime expiredAt;
 
+    @Column(name = "is_telegram_number")
+    boolean isTelegramNumber;
+
+    @Column(name = "username")
+    String username;
+
+    @Column(name = "first_name")
+    String firstName;
+
+    @Column(name = "last_name")
+    String lastName;
+
+    @Column(name = "phone_number")
+    String phoneNumber;
+
     @PrePersist
     protected void onCreate() {
         createdAt = updatedAt = LocalDateTime.now();

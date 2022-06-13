@@ -8,12 +8,12 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 @Component
 public class MessageFakerUtil {
-    public Message fakeStop(Session session, String chatId) {
+    public Message fakeStop(Session session) {
         Message message = new Message();
         User user = new User();
         user.setId(session.getUser().getUserId());
         Chat chat = new Chat();
-        chat.setId(Long.valueOf(chatId));
+        chat.setId(session.getChatId());
         message.setText("/stop");
         message.setFrom(user);
         message.setChat(chat);

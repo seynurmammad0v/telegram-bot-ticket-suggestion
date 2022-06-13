@@ -39,20 +39,10 @@ public class AgencyOffer {
     @Column(name = "is_accepted")
     boolean isAccepted;
 
-    @Column(name = "is_telegram_number")
-    boolean isTelegramNumber;
 
-    @Column(name = "username")
-    String username;
+    @Column(name = "details_id")
+    Long offerDetailsId;
 
-    @Column(name = "first_name")
-    String firstName;
-
-    @Column(name = "last_name")
-    String lastName;
-
-    @Column(name = "phone_number")
-    String phoneNumber;
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     LocalDateTime createdAt;

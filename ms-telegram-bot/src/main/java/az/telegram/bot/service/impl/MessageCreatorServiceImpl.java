@@ -47,27 +47,27 @@ public class MessageCreatorServiceImpl implements MessageCreatorService {
     }
 
     @Override
-    public SendMessage createNextBtn(Session session, Question nextQuestion, Long langId) {
+    public SendMessage createNextBtn(Session session, Question nextQuestion) {
         return buttonsUtil.buttonMessage(
-                createInlMarkup(nextQuestion.getActions(), langId),
+                createInlMarkup(nextQuestion.getActions(), session.getLangId()),
                 session.getChatId().toString(),
-                getNextBtnText(session, nextQuestion, langId)
+                getNextBtnText(session, nextQuestion)
         );
     }
 
     @Override
-    public EditMessageText updateNextBtn(Session session, Question nextQuestion, Long langId) {
+    public EditMessageText updateNextBtn(Session session, Question nextQuestion) {
         return EditMessageText.builder()
                 .chatId(session.getChatId().toString())
                 .messageId(session.getNextMessageId())
-                .text(getNextBtnText(session, nextQuestion, langId))
-                .replyMarkup(createInlMarkup(nextQuestion.getActions(), langId))
+                .text(getNextBtnText(session, nextQuestion))
+                .replyMarkup(createInlMarkup(nextQuestion.getActions(), session.getLangId()))
                 .build();
     }
 
-    public String getNextBtnText(Session session, Question nextQuestion, Long langId) {
+    public String getNextBtnText(Session session, Question nextQuestion) {
         return String.format(
-                questionGenerator(nextQuestion, langId),
+                questionGenerator(nextQuestion, session.getLangId()),
                 session.getOffersCount() - session.getSentCount()
         );
     }

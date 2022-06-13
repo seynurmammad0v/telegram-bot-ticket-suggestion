@@ -16,9 +16,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 
 public interface MessageCreatorService {
-    SendMessage createNextBtn(Session session, Question nextQuestion, Long langId);
+    SendMessage createNextBtn(Session session, Question nextQuestion);
 
-    EditMessageText updateNextBtn(Session session, Question nextQuestion, Long langId);
+    EditMessageText updateNextBtn(Session session, Question nextQuestion);
 
     SendMessage simpleQuestionMessage(Long chatId, Question question, Long langId);
 

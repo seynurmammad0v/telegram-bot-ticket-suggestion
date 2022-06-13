@@ -41,18 +41,18 @@ public class ReplyMessageService implements MessageService {
             if (offer != null) {
                 offer.setAccepted(true);
                 agencyOfferRepository.save(offer);
-                if (Strings.isNullOrEmpty(offer.getPhoneNumber())) {
+                if (Strings.isNullOrEmpty(session.getPhoneNumber())) {
                     sessionService.setQuestionByState(offer.getSessionId(), StaticStates.REPLY_START);
-                    offer.setFirstName(msg.getFrom().getFirstName());
-                    offer.setLastName(msg.getFrom().getLastName());
-                    offer.setUsername(msg.getFrom().getUserName());
-                    return inputMessageService.handle(msg, true);
+                    session.setFirstName(msg.getFrom().getFirstName());
+                    session.setLastName(msg.getFrom().getLastName());
+                    session.setUsername(msg.getFrom().getUserName());
                 } else {
                     sessionService.setQuestionByState(offer.getSessionId(), StaticStates.REPLY_END);
-                    msg.setText(offer.getPhoneNumber());
+                    msg.setText(session.getPhoneNumber());
                     agencyOfferRepository.save(offer);
-                    return inputMessageService.handle(msg, true);
                 }
+                sessionService.saveSession(session);
+                return inputMessageService.handle(msg, true);
             } else {
                 return msgCreatorService.createError(msg.getChatId(),
                         new OfferShouldBeRepliedException(),

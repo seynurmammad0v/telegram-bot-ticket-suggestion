@@ -6,11 +6,8 @@ import az.telegram.bot.facade.handler.MessageService;
 import az.telegram.bot.facade.handler.QueryService;
 import az.telegram.bot.model.Bot;
 import az.telegram.bot.model.enums.ActionType;
-import az.telegram.bot.model.enums.QueryType;
-import az.telegram.bot.service.LanguageService;
-import az.telegram.bot.service.MessageCreatorService;
-import az.telegram.bot.service.QuestionService;
-import az.telegram.bot.service.SessionService;
+import az.telegram.bot.model.enums.StaticStates;
+import az.telegram.bot.service.*;
 import az.telegram.bot.utils.CalendarUtil;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,18 +28,22 @@ public class CallbackQueryService implements QueryService {
     private final SessionService sessionService;
     private final MessageService inputMessageService;
 
+    private final ListenerService listenerService;
+
     public CallbackQueryService(QuestionService questionService,
                                 Bot bot,
                                 MessageCreatorService msgCreatorService,
                                 LanguageService languageService,
                                 SessionService sessionService,
-                                @Qualifier("input") MessageService inputMessageService) {
+                                @Qualifier("input") MessageService inputMessageService,
+                                ListenerService listenerService) {
         this.questionService = questionService;
         this.bot = bot;
         this.msgCreatorService = msgCreatorService;
         this.languageService = languageService;
         this.sessionService = sessionService;
         this.inputMessageService = inputMessageService;
+        this.listenerService = listenerService;
     }
 
     @Override
@@ -57,9 +58,8 @@ public class CallbackQueryService implements QueryService {
     }
 
     private BotApiMethod<?> regexInlineButton(CallbackQuery msg) {
-        if (Objects.equals(msg.getData(), QueryType.NEXT.toString())) {
-            //todo
-//            listenerService.sendNextPhotos(msg.getFrom().getId());
+        if (Objects.equals(msg.getData(), StaticStates.NEXT.toString())) {
+            listenerService.sendNextPhotos(msg.getFrom().getId());
             return msgCreatorService.deleteMessage(msg.getMessage().getChatId(), msg.getMessage().getMessageId());
         }
         return null;

@@ -28,5 +28,27 @@ spring:
       ddl-auto: update
   liquibase:
     change-log: classpath:liquibase/changelog-master.yml
-    #    disable liquibase
+#    disable liquibase
 #    enabled: false
+
+offer:
+  sentCount: "5"
+  responseLimit:
+    days: "0"
+    hours: "0"
+    minutes: "5"
+  image:
+    path: "images/"
+    extension: ".jpg"
+cron:
+  waitingAnswerScheduler: "0 * 00-23 * * ?"
+  expiredTimeExpression: "0 * 00-23 * * ?"
+
+offerTemplate:
+  path: "src/main/resources/html/offer.html"
+  width: 440
+  height: 620
+  converter:
+    url: "https://hcti.io/v1/image"
+    userId: "672159ef-8dd0-4202-beb4-fb162cf1a602"
+    apiKey: "f3f81f28-4a92-45e8-ba2e-3b1892bd2f09"

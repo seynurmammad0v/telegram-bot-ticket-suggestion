@@ -14,6 +14,8 @@ import az.telegram.bot.model.enums.Status;
 import az.telegram.bot.service.SessionService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class SessionServiceImpl implements SessionService {
@@ -50,6 +52,10 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Session getSessionIfExist(Long userId) {
         return sessionRepository.getByUserIdAndNotInStatus(userId, Status.INACTIVE);
+    }
+    @Override
+    public Session getSessionById(Long sessionId) {
+        return sessionRepository.getBySessionIdAndNotInStatus(sessionId, Status.INACTIVE);
     }
 
     @Override
@@ -92,5 +98,16 @@ public class SessionServiceImpl implements SessionService {
         answer.setSession(session);
         answerRepository.save(answer);
     }
+
+    @Override
+    public void saveSession(Session session) {
+        sessionRepository.save(session);
+    }
+
+    @Override
+    public List<Session> getExpiredSessionsInStatus(Status status) {
+        return sessionRepository.getExpiredSessionsInStatus(status);
+    }
+
 
 }
