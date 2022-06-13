@@ -1,7 +1,7 @@
 package az.telegram.bot.facade;
 
-import az.telegram.bot.service.MessageService;
-import az.telegram.bot.service.QueryService;
+import az.telegram.bot.facade.handler.MessageService;
+import az.telegram.bot.facade.handler.QueryService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -19,7 +19,6 @@ public class TelegramFacade {
     private final MessageService commandHandler;
     private final MessageService replyHandler;
     private final MessageService contactHandler;
-
 
     public TelegramFacade(
             @Qualifier("input") MessageService inputMessageService,
